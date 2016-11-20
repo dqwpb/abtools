@@ -1,5 +1,5 @@
 # abtools
 notes and tools for ArchBang
 
-![ArchBang Desktop](/images/desktop.png)
+![ArchBang Desktop](/desktop.png)
 
