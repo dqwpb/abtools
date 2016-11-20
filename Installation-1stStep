@@ -1,0 +1,44 @@
+1. > sudo gparted
+ps: Partition Table: gpt
+ps: /dev/sda1 -> 512M, fat32 -> boot, esp
+    /dev/sda2 -> 16384M, ext4
+    /dev/sda3 -> last, ext4
+    ps: after formation, then make flags
+
+2. > sudo mount /dev/sda2 /mnt
+   > sudo mkdir /mnt/boot
+   > sudo mkdir /mnt/home
+   > sudo mount /dev/sda1 /mnt/boot
+   > sudo mount /dev/sda3 /mnt/home
+
+3. Install:
+   [1] Install ArchBang
+   [9] Create User
+
+4. > sudo arch-chroot /mnt /bin/bash
+   # nano /etc/pacman.d/mirrorlist
+   # /opt/archbang/arch-keys
+   # pacman -Syyu
+   # bootctl --path=/boot install
+   # nano /boot/loader/entries/arch.conf
+    ---
+    title       [Wellcome Info]
+    linux       /vmlinuz-linux
+    initrd      /initramfs-linux.img
+    options     root=/dev/sda2 rw
+    ---
+   # nano /boot/loader/loader.conf
+    ---
+    default     arch
+    timeout     [time to wait]
+    editor      0
+    ---
+   # bootctl update
+
+   # exit
+
+> sudo umount /dev/sda1
+> sudo umount /dev/sda3
+> sudo umount /dev/sda2
+> sudo shutdown now	
+
