@@ -1,0 +1,194 @@
+0. Common senses:
+  a. systemctl start [service_name]: start the service
+  b. systemctl enable [service_name]: auto run the service when startup
+
+1. Disk formation:
+  a. lsblk # /dev/sda
+  b. cfdisk /dev/sda # gpt
+     ---
+     new -> type: EFI System -> 512M
+     new -> type: Linux File System -> 120G
+     new -> tppe: Linux File System -> least
+     write
+     quit
+     ---
+  c. mkfs.fat -F32 /dev/sda1
+     mkfs.ext4 -O "^has_journal" /dev/sda2
+     mkfs.ext4 -O "^has_journal" /dev/sda3
+     tune2fs -o discard /dev/sda2
+     tune2fs -o discard /dev/sda3
+     ps: 1) If reinstall, gdisk(d,w).
+         2) If swap is needed,
+            mkswap /dev/sda[n]
+            swap on /dev/sda[n]
+         3) SSD Optimization: After system installation
+         nano /etc/fstab
+         ---
+         UUID=[UUID]  /[mount_pt]   [part_type]   noatime,nodiratime,discard,defaults   0   [part_no]
+           ps: Do Every-NOT-BOOT.
+         tmpfs   /tmp       tmpfs   defaults,noatime,mode=1777   0  0
+
+         tmpfs   /var/spool tmpfs   defaults,noatime,mode=1777   0  0
+
+         tmpfs   /var/tmp   tmpfs   defaults,noatime,mode=1777   0  0
+         tmpfs   /var/log   tmpfs   defaults,noatime,mode=0755   0  0
+         ---
+         In Firefox, add "browser.cache.disk.parent_directory" and set it to "/tmp".
+
+2. Connect to mirror:
+  a. nano /etc/pacman.d/mirrorlist
+  ---
+  Server = http://archlinux.cs.nctu.edutw/$repo/os/$arch
+  ---
+  b. dhcpcd
+     ip addr
+     ping -c 3 8.8.8.8
+
+3. Install basic system:
+  a. mount /dev/sda2 /mnt
+     mkdir -p /mnt/boot
+     mkdir -p /mnt/ext
+     mount /dev/sda1 /mnt/boot
+     mount /dev/sda3 /mnt/ext # For fstab
+  b. pacstrap -i /mnt base base-devel
+  c. genfstab -U /mnt > /mnt/etc/fstab
+  d. arch-chroot /mnt > /bin/bash
+
+4. Details settings:
+  a. echo [hostname] > /etc/hostname
+  b. nano /etc/hosts
+  ---
+  #<ip-address>  <hostname.domain.org>    <hostname>
+  127.0.0.1      localhost.localdomain    localhost  [hostname]
+  ::1            localhost.localdomain    localhost  [hostname]
+  ---
+  c. timedatectl set-ntp true
+
+  d. nano /etc/locale.gen
+  ---
+  en_US.UTF-8 UTF-8
+  zh_TW.UTF-8 UTF-8
+  zh.CN.UTF-8 UTF-8
+  zh_TW BIG5
+  ---
+  locale-gen
+    ps: After system installation:
+      echo LANG=zh_TW.UTF-8 > /etc/locale.conf
+      export LANG=zh_TW.UTF-8
+    Remember to choose "Language" before using gnome-terminal.
+  e. tzselect # Asia -> Taiwan
+     ln -sf /usr/share/zoneinfo/Asia/Taipei /etc/localtime
+     hwclock --systohc --localtime
+     date
+  f. mkinitcpio -p linux
+  g. bootctl --path=/boot install
+     nano /boot/loader/entries/arch.conf
+     ---
+     title    [Welcome_message]
+     linux    /vmlinuz-linux
+     initrd   /initramfs-linux.img
+     options  root=/dev/sda2 rw
+     ---
+     nano /boot/loader/loader.conf
+     ---
+     default    arch
+     timeout    [time_to_wait]
+     editor     0
+     ---
+     bootctl update
+  h. passwd
+     useradd -m -g users -s /bin/bash [username]
+     passwd [username]
+     groupadd sudo
+     gpasswd -a [username] sudo
+     gpassed -a [username] wheel
+  i. systemctl enable dhcpcd@[interfate].service # By "ip addr"
+     pacman -S iw wpa_supplicant dialog
+  exit
+  umount /dev/sda1
+  umount /dev/sda3
+  umount /dev/sda2
+  shutdown -h now
+  (Remove iso and "reboot now")
+
+5. sudoer:
+  a. pacman -S sudo
+  b. nano /etc/sudoers
+  ---
+  [username] ALL=(ALL) ALL
+  %wheel ALL=(ALL) ALL
+  ---
+
+6. virtualbox specials:
+  a. sudo pacman -S linux-headers
+  b. sudo pacman -S virtualbox-host-dkms
+  c. sudo pacman -S virtualbox-guest-utils
+  d. sudo nano /etc/modules-load.d/virtualbox.conf
+  ---
+  vboxguest
+  vboxsf
+  vboxvideo
+  ---
+  sudo systemctl enable vboxservice.service
+    ps: To check, "ps -ax | grep -i vbox"
+  sudo reboot now
+
+7. Install yaourt:
+  a. sudo nano /etc/pacman.conf
+  ---
+  [archlinuxfr]
+  SigLevel = Never
+  Server = http://repo.archlinux.fr/$arch
+  ---
+  b. pacman -Sy yaourt
+
+8. Gnome Desktop:
+  a. pacman -S xorg-server xorg-xinit
+  b. pacman -S xf86-video-[card]
+    ps: Intel   =>  [card] = intel
+        nVidia  =>  [card] = nv
+        ATI     =>  [card] = ati
+  c. pacman -S gnome gnome-extra
+  d. pacman -S gdm
+  e. systemctl enable gdm
+  f. pacman -S xorg-xinit
+     nano /etc/X11/xinit/xinitrc
+     ---
+     (The following should be commented)
+     twm &
+     xclock -geometry 50x50-1+1 &
+     xterm -geometry 80x50+494+51 & 
+     xterm -geometry 80x20+494-0 &
+     exec xterm -geometry 80x66+0+0 -name login
+     (Add the following)
+     exec gnome-session
+     ---
+      ps: Set for indivisual user, "cp /etc/X11/xinit/xinitrc ~/.xinitrc"
+    
+  g. pacman -S wqy-microhei
+  g. pacman -S gnome-tweak-tool
+  h. yaourt -S numix-circle-icon-theme-git
+     gnome-tweak-tool
+  i. yaourt -S gtk-theme-arc-git
+     gnome-tweak-tool
+  j. gnome-tweak-tool’s extension: User themes
+     (unzip Air-theme.tar, put dir in /usr/share/themes/)     gnome-tweak-tool
+  k. pacman -S docky
+
+9. Input method: chewing
+  a. pacman -S fcitx-im fcitx-configtool
+     nano ~/.bashrc
+     ---
+     export GTK_IM_MODULE=fcitx
+     export XMODIFIERS=“@im=fcitx”
+     export QT_IM_MODULE=fcitx
+     ---
+     settings set \
+     org.gnome.settings-daemon.plugins.xsettings overrides \
+     "{'Gtk/IMModule':<'fcitx'>}"
+     yaourt -S fcitx-chewing
+
+10. Some others:
+  a. yaourt -S google-chrome
+  b. pacman -S p7zip
+  c. pacman -S file-roller
