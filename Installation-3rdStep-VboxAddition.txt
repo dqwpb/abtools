@@ -1,0 +1,8 @@
+1. Mount Guest Addition ISO:
+$ sudo su
+# mkdir /media/cdrom
+# mount /dev/cdrom /media/cdrom
+# cd /media/cdrom
+# xxx.run
+
+2. (TBC)
