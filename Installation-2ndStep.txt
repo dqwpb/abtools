@@ -1,0 +1,14 @@
+The Fcixt-chewing input method:
+
+1. The base:
+$ sudo pacman -Sy ttf-droid fcitx fcitx-chewing fcitx-gtk2 fcitx-gtk3 fcitx-configtool
+
+2. The settings:
+$ nano ~/.xprofile
+---
+export GTK_IM_MODULE=fcitx
+export QT_IM_MODULE=fcitx
+export XMODIFIERS="@im=fcitx"
+---
+
+3. logout and login
