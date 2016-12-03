@@ -1,0 +1,6 @@
+$ sudo su
+# tzselect
+# ln -sf /usr/share/zoneinfo/Asia/Taipei /etc/localtime
+# hwclock --systohc --localtime
+# exit
+$ date
