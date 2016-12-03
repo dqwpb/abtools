@@ -1,7 +1,15 @@
-# 1. <C> + <A> + [left/right]: To Desktop#n
+# 1. To Desktop#n
 
-# 2. <A> + <S> + [left/right]: Move To Desktop#n
+<C> + <A> + [left/right]
 
-# 3. <host> + f: File Manager
+# 2. Move To Desktop#n
 
-# 4. <host> + t: Terminal
+<A> + <S> + [left/right]: 
+
+# 3. File Manager
+
+<host> + f: 
+
+# 4. Terminal
+
+<host> + t
