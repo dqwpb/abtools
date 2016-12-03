@@ -1,8 +1,8 @@
-# 1. To Desktop#n
+# 1. To Desktop
 
-<C> + <A> + [left/right]
+\<C\> + \<A\> + \[left\/right\]
 
-# 2. Move To Desktop#n
+# 2. Move To Desktop
 
 <A> + <S> + [left/right]: 
 
