@@ -1,0 +1,5 @@
+$ sudo pacman -Sy base-dev
+$ yaourt -S visual-studio-code
+$ yaourt -S mono
+
+[<C>+P]: ext install python/csharp/beautify/eslint/cpptools
