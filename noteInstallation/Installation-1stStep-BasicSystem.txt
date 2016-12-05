@@ -18,8 +18,9 @@ ps: /dev/sda1 -> 512M, fat32 -> boot, esp
 [故障排除-網路(20261205)]
 (使用外接usb網卡,vbox,橋接)
 > sudo dhcpcd -k
-> ip addr add [指定ip]/24 dev [網卡名稱-用ip addr查詢]
-> ip route add default via [gateway-ip]
+> sudo ip addr add [指定ip]/24 dev [網卡名稱-用ip addr查詢]
+> sudo ip route add default via [gateway-ip]
+> ping -c 4 8.8.8.8
 
 4. > sudo arch-chroot /mnt /bin/bash
    # nano /etc/pacman.d/mirrorlist
