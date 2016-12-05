@@ -34,7 +34,8 @@ ps: /dev/sda1 -> 512M, fat32 -> boot, esp
 ---
 nameserver 8.8.8.8
 ---
-# pacman-key --init
+# pacman-key --populate archlinux
+(若有問題先pacman-key --init,但是會要再刪除一次)
    
    # pacman -Syyu
    # bootctl --path=/boot install
