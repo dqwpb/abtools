@@ -25,6 +25,17 @@ ps: /dev/sda1 -> 512M, fat32 -> boot, esp
 4. > sudo arch-chroot /mnt /bin/bash
    # nano /etc/pacman.d/mirrorlist
    # /opt/archbang/arch-keys
+   
+[故障排除-金鑰(20261205)]  
+(上一步無效)
+# mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist~
+# curl -o /etc/pacman.d/mirrorlist https://www.archlinux.org/mirrorlist/?country=TW
+# nano /etc/resolv.conf
+---
+nameserver 8.8.8.8
+---
+# pacman-key --init
+   
    # pacman -Syyu
    # bootctl --path=/boot install
    # nano /boot/loader/entries/arch.conf
