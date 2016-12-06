@@ -16,7 +16,7 @@ ps: /dev/sda1 -> 512M, fat32 -> boot, esp
    [9] Create User
 
 [故障排除-網路(20261205)]
-(使用外接usb網卡,vbox,橋接)
+(使用外接usb網卡,vbox,橋接-20161206測試可用無線網卡)
 > sudo dhcpcd -k
 > sudo ip addr add [指定ip]/24 dev [網卡名稱-用ip addr查詢]
 > sudo ip route add default via [gateway-ip]
@@ -30,10 +30,12 @@ ps: /dev/sda1 -> 512M, fat32 -> boot, esp
 (上一步無效)
 # mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist~
 # curl -o /etc/pacman.d/mirrorlist https://www.archlinux.org/mirrorlist/?country=TW
+(只指定台灣鏡像不好，多選JP鏡像-改成https://www.archlinux.org/mirrorlist/all/)
 # nano /etc/resolv.conf
 ---
 nameserver 8.8.8.8
 ---
+(這步很重要，無法更新先確認nameserver)
 # pacman-key --populate archlinux
 (若有問題先pacman-key --init,但是會要再刪除一次)
    
