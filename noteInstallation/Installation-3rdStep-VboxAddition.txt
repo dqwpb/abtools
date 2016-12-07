@@ -24,5 +24,4 @@ vboxguest
 vboxsf
 vboxvideo
 ---
-sudo systemctl enable vboxservice.service
 ps: To check, "ps -ax | grep -i vbox"
