@@ -1,3 +1,4 @@
+(以下安裝有問題)
 1. Mount Guest Addition ISO:
 $ sudo su
 # mkdir /media/cdrom
@@ -5,4 +6,23 @@ $ sudo su
 # cd /media/cdrom
 # xxx.run
 
-2. (TBC)
+(故障排除)
+1. 安裝編譯工具
+$ sudo pacman -S base-devel
+(相當於ubuntu的build-essentials)
+
+2. 安裝guest-addition(從套件庫直接安裝)
+$ sudo pacman -S linux-lts
+$ sudo pacman -S linux-lts-headers
+$ sudo pacman -S virtualbox-guest-dkms
+$ sudo pacman -S virtualbox-guest-utils
+
+3. 設定檔
+$ sudo nano /etc/modules-load.d/virtualbox.conf
+---
+vboxguest
+vboxsf
+vboxvideo
+---
+sudo systemctl enable vboxservice.service
+ps: To check, "ps -ax | grep -i vbox"
