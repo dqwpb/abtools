@@ -14,6 +14,7 @@ $ sudo pacman -S base-devel
 2. 安裝guest-addition(從套件庫直接安裝)
 $ sudo pacman -S linux-lts
 $ sudo pacman -S linux-lts-headers
+(視情況可能需要sudo pacman -S linux-headers)
 $ sudo pacman -S virtualbox-guest-dkms
 $ sudo pacman -S virtualbox-guest-utils
 
@@ -24,4 +25,8 @@ vboxguest
 vboxsf
 vboxvideo
 ---
+
+4. 允許且預設開機啟動服務
+$ sudo systemctl enable vboxservice.service
+$ sudo systemctl enable vboxservice.service
 ps: To check, "ps -ax | grep -i vbox"
