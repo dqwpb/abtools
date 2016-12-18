@@ -2,3 +2,4 @@ sudo nano /etc/locale.conf
 ---
 LANG="zh_TW.UTF-8"
 ---
+# This fixes title chinese words of firefox
