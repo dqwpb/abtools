@@ -1,0 +1,4 @@
+sudo nano /etc/locale.conf
+---
+LANG="zh_TW.UTF-8"
+---
